@@ -69,6 +69,25 @@ func main() {
 			fmt.Println("ITEM_NOT_FOUND")
 			return
 		}
+		fmt.Println("------------------------------------------------------------------------")
+		fmt.Println("Acceptable Coins:")
+		for _, coin := range vm.Coins {
+			fmt.Println(coin.Type)
+		}
+		fmt.Println("------------------------------------------------------------------------")
+		totalCoinsPrice := 0
+		returningTotal := 0
+		for _, coin := range vm.Coins {
+			num := 0
+			fmt.Print("How many coins of ", coin.Type, ": ")
+			fmt.Fscanln(r, &num)
+			totalCoinsPrice += coin.Type * num
+			if totalCoinsPrice >= vm.Items[productChoice].Price {
+				returningTotal = totalCoinsPrice - vm.Items[productChoice].Price
+				break
+			}
+		}
+		fmt.Println("returningTotal: ", returningTotal)
 	case 3:
 		services.Exit()
 	default:
