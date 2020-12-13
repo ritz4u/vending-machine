@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"os"
 	"vending-machine/models"
 )
@@ -36,4 +37,42 @@ func getItems() map[string]*models.Item {
 	itemMap["Pepsi"] = &models.Item{"Pepsi", 35, 10}
 	itemMap["Soda"] = &models.Item{"Soda", 45, 10}
 	return itemMap
+}
+
+// DisplayBalance displays current balance for seller and user
+func DisplayBalance() {
+	fmt.Println("------------------------------------------------------------------------")
+	fmt.Println("Seller balance: ", vm.SellerBalance)
+	fmt.Println("User balance: ", vm.UserBalance)
+	fmt.Println("------------------------------------------------------------------------")
+}
+
+// CancelTransaction cancels the transaction & refund money to user
+func CancelTransaction(productChoice string) {
+	// refund money
+	vm.UserBalance += vm.Items[productChoice].Price
+	// debit the amount from seller account
+	vm.SellerBalance -= vm.Items[productChoice].Price
+}
+
+// ConfirmTransaction confirms the transaction & debit user balance
+func ConfirmTransaction(productChoice string) {
+	// decrease available items
+	vm.Items[productChoice].AvailableItems--
+	// deduct balance
+	vm.UserBalance -= vm.Items[productChoice].Price
+	// credit the amount to seller account
+	vm.SellerBalance += vm.Items[productChoice].Price
+}
+
+// ReturnProduct returns product & remaining change to seller
+func ReturnProduct(productChoice string, returningTotal int) {
+	// increase available items
+	vm.Items[productChoice].AvailableItems++
+	// debit the amount from seller account
+	vm.SellerBalance -= vm.Items[productChoice].Price
+	// credit the returned change to seller account
+	vm.SellerBalance += returningTotal
+	// refund money to user
+	vm.UserBalance += (vm.Items[productChoice].Price + returningTotal)
 }

@@ -87,10 +87,32 @@ func main() {
 				break
 			}
 		}
-		fmt.Println("returningTotal: ", returningTotal)
+		// fmt.Println("returningTotal: ", returningTotal)
+		services.ConfirmTransaction(productChoice)
+		fmt.Println("------------------------------------------------------------------------")
+		fmt.Println("Enter 1 to confirm, 2 to cancel transaction, 3 to return the product")
+		confirmChoice := 0
+		_, err = fmt.Fscanln(r, &confirmChoice)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		switch confirmChoice {
+		case 1:
+			services.DisplayBalance()
+			services.Exit()
+		case 2:
+			services.CancelTransaction(productChoice)
+		case 3:
+			services.ReturnProduct(productChoice, returningTotal)
+		default:
+			fmt.Println("Wrong input")
+			services.Exit()
+		}
 	case 3:
 		services.Exit()
 	default:
 		fmt.Println("Wrong input")
 	}
+	services.DisplayBalance()
 }
